@@ -79,3 +79,7 @@ yield <- function(tau, r, V, alpha, beta, gamma, delta, eta, nu) {
   
   return(yield)
 }
+
+# Vectorized discount bond function
+mod_discount <- Vectorize(discount, vectorize.args = "tau")
+

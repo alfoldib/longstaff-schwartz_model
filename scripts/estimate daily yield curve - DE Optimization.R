@@ -10,52 +10,10 @@ require(data.table)
 setwd("C:/Users/Boldi/Documents/Publish/Interest rate models/longstaff-schwartz_model")
 
 # Loading data and functions
-source("./Scripts/load data.R")
-source("./Functions/Longstaff - Schwarcz functions.R")
-source("./Functions/Goodness-of-fit functions.R")
-
-# Vectorized discount bond function
-mod_discount <- Vectorize(discount, vectorize.args = "tau")
-
-# Objective function
-obj_function <- function(p) {
-  
-  discount_curve <- mod_discount(as.numeric(rownames(curr_cf_matrix)), 
-                                 curr_yield, curr_var,
-                                 p[1], p[2], p[3], p[4], p[5], p[6])
-  
-  p_hat <- colSums(curr_cf_matrix * discount_curve)
-  d_hat <- colSums(((curr_cf_matrix * discount_curve) / p_hat) * 
-                     as.numeric(rownames(curr_cf_matrix)))
-  
-  res <- wmae(curr_prices$price, p_hat, 1/d_hat)
-  
-  if(is.na(res) | is.nan(res)) {
-    res <- Inf
-  }
-  
-  return(res)
-}
-
-# Function to store the results of the calibration
-extract_bond_spec_res <- function(p) {
-  discount_curve <- mod_discount(as.numeric(rownames(curr_cf_matrix)), 
-                                 curr_yield, curr_var,
-                                 p[1], p[2], p[3], p[4], p[5], p[6])
-  
-  p_hat <- colSums(curr_cf_matrix * discount_curve)
-  d_hat <- colSums(((curr_cf_matrix * discount_curve) / p_hat) * 
-                     as.numeric(rownames(curr_cf_matrix)))
-  error <- curr_prices$price - p_hat
-  
-  res <- cbind(p_hat, d_hat, error)
-  res <- data.table(alias = rownames(res), 
-                    fitted = res[, "p_hat"], 
-                    dur = res[, "d_hat"],
-                    err = res[, "error"])
-  
-  return(res)
-}
+source("./scripts/load data.R")
+source("./functions/longstaff-schwarcz functions.R")
+source("./functions/goodness-of-fit functions.R")
+source("./functions/support functions for DE optimization.R")
 
 # Getting currency for each bond id (alias)
 ccy <- cf_data[, .N, by = list(alias, currency)]

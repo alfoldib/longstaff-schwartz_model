@@ -6,60 +6,26 @@ require(parallel)
 require(data.table)
 require(foreach)
 
-setwd("C:/Users/Boldi/Documents/Szakdoga")
+setwd("C:/Users/Boldi/Documents/Publish/Interest rate models/longstaff-schwartz_model")
 
-source("./Scripts/load data.R")
-source("./Functions/Longstaff - Schwarcz functions.R")
-source("./Functions/Goodness-of-fit functions.R")
 
+# Loading data and functions
+source("./scripts/load data.R")
+source("./functions/longstaff-schwarcz functions.R")
+source("./functions/goodness-of-fit functions.R")
+source("./functions/support functions for DE optimization.R")
+
+# Load start parameters 
+# - these are calculated with the GMM calibrating procedure
+# - for detailed info see "get starting values for optimization - GMM.R" script
 load("./Data/start parameters.rdata")
 
-# Vektorosra módosított diszkont kötvény ár függvény
-mod_discount <- Vectorize(discount, vectorize.args = "tau")
-
-# Célfüggvény
-obj_function <- function(p) {
-  
-  discount_curve <- mod_discount(as.numeric(rownames(curr_cf_matrix)), 
-                                 curr_yield, curr_var,
-                                 p[1], p[2], p[3], p[4], p[5], p[6])
-  
-  p_hat <- colSums(curr_cf_matrix * discount_curve)
-  d_hat <- colSums(((curr_cf_matrix * discount_curve) / p_hat) * 
-                     as.numeric(rownames(curr_cf_matrix)))
-  
-  res <- wmae(curr_prices$price, p_hat, 1/d_hat)
-  
-  if(is.na(res) | is.nan(res)) {
-    res <- Inf
-  }
-  
-  return(res)
-}
-
-extract_bond_spec_res <- function(p) {
-  discount_curve <- mod_discount(as.numeric(rownames(curr_cf_matrix)), 
-                                 curr_yield, curr_var,
-                                 p[1], p[2], p[3], p[4], p[5], p[6])
-  
-  p_hat <- colSums(curr_cf_matrix * discount_curve)
-  d_hat <- colSums(((curr_cf_matrix * discount_curve) / p_hat) * 
-                     as.numeric(rownames(curr_cf_matrix)))
-  error <- curr_prices$price - p_hat
-  
-  res <- cbind(p_hat, d_hat, error)
-  res <- data.table(alias = rownames(res), 
-                    fitted = res[, "p_hat"], 
-                    dur = res[, "d_hat"],
-                    err = res[, "error"])
-  
-  return(res)
-}
-
+# Getting currency for each bond id (alias)
 ccy <- cf_data[, .N, by = list(alias, currency)]
 ccy <- merge(best_price, ccy, by = "alias", all.x = T)
 
-# Cash-flow adatok elõkészítése - csak fix kamatozású forintban denominált államkötvények
+# Preparation cash-flow data 
+# - only bonds denominated in HUF with fixed interest rate
 prep_cf_data <- cf_data[interest_type != "FLOAT" & currency == "HUF",
                         list(
                           alias,
@@ -69,34 +35,36 @@ prep_cf_data <- cf_data[interest_type != "FLOAT" & currency == "HUF",
                           cf_amount = ((ifelse(is.na(principal_amount) | principal_amount < 0, 
                                                0, 
                                                principal_amount) + 
-                                         ifelse(is.na(interest_amount), 
-                                                0, 
-                                                interest_amount)) / 
+                                          ifelse(is.na(interest_amount), 
+                                                 0, 
+                                                 interest_amount)) / 
                                          face_value * 100)
                         )]
 prep_cf_data <- prep_cf_data[cf_amount != 0]
 
-# Ár adatok elõkészítése - csak olyan áradatkiválasztása, ahol van cash-flow adat
+# Preparation of market prices 
+# - filtering out those prices where I don't have cash-flow
 prep_prices <- best_price[,
-                           list(
-                             alias, 
-                             date, 
-                             bid = bid_net_price,
-                             ask = ask_net_price,
-                             acc_int = accrued_interest,
-                             price = gross_mid_price
-                            )]
+                          list(
+                            alias, 
+                            date, 
+                            bid = bid_net_price,
+                            ask = ask_net_price,
+                            acc_int = accrued_interest,
+                            price = gross_mid_price
+                          )]
 
 prep_prices <- merge(prep_prices, prep_cf_data[, .N, by = list(alias, issue_date, maturity_date)], by = "alias")
 prep_prices[, N := NULL]
 
+# Storing names of parameters in a vector
 param_name <- c("alpha", "beta", "gamma", "delta", "eta", "nu")
 
-
-# Becslési napok meghatározása
+# Gathering the dates from the market price dataset
 dates <- sort(unique(best_price$date))
-dates <- dates[dates >= as.Date("2004-01-01") & dates < as.Date("2004-06-30")]
+dates <- dates[dates >= as.Date("2015-06-01") & dates < as.Date("2015-07-01")]
 
+# Optiona place to calibrate to a single trading day
 curr_date <- as.Date("2004-04-09")
 
 for (curr_date in dates) {
@@ -107,9 +75,6 @@ for (curr_date in dates) {
   
   # Next command is to overcome buffered output in RGui
   flush.console()
-  
-  # Next command simulates a "long" process (taking 1 sec)
-  # Sys.sleep(1)
   
   # Szûrés az aktuális piaci árakra
   curr_prices <- prep_prices[date == curr_date]
