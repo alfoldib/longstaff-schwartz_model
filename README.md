@@ -18,6 +18,6 @@ The project is implemented in `R`.
 - [x] Script for estimating short-run model parameters with DE optimization
 - [x] Script for estimating short-run model parameters with DE optimization with initial population
 
-
+---
 
 ![alt text](https://github.com/alfoldib/longstaff-schwartz_model/blob/master/plots/plotGMMfit.png "Plot about the GMM fit")
