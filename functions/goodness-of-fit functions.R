@@ -1,4 +1,4 @@
-# Support / Goodness-of-fit functions
+## Support / Goodness-of-fit functions
 
 # Mean Absolute Error
 mae <- function(actual, estimate) {

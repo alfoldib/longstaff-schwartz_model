@@ -66,9 +66,11 @@ for (curr_date in dates) {
   # If you run it without the loop, please add a relevant date here
   curr_date <- as.Date(curr_date, origin = "1970-01-01")
   
+  # Write current date on the console
   cat("Starting date", as.character(curr_date), "\n")
   
   # Next command is to overcome buffered output in RGui
+  # in order to see where the loop at it's iteration process
   flush.console()
   
   # Filter current market prices
@@ -78,7 +80,7 @@ for (curr_date in dates) {
   # Filter cash-flow data of current bonds
   curr_bonds <- merge(prep_cf_data, curr_prices[, list(alias)], by = "alias")
   
-  # Creating a cash-flow matrix
+  # Creating the cash-flow matrix
   cf_matrix <- dcast(curr_bonds[cf_date > curr_date], cf_date ~ alias, value.var = "cf_amount", fill = 0)
   cf_matrix[, t := (cf_date - curr_date) / 365]
   
@@ -106,12 +108,13 @@ for (curr_date in dates) {
                                                "wmae", "mod_discount",
                                                "A", "B", "C", "D")))
   
-  # Gather relevant data from a single calculation
+  # Gather relevant data from a single optimization
   curr_prices <- merge(curr_prices, extract_bond_spec_res(optimum$optim$bestmem), by = "alias", all.x = T)
   curr_obj_value <- data.table(date = curr_date, obj_value = optimum$optim$bestval)
   curr_est_params <- data.table(date = curr_date, name = param_name, value = optimum$optim$bestmem)
   
-  # Storing the relevant data from a calculation (fitted price, estimation error, durations, etc.)
+  # Storing the relevant data from the optimization
+  # (fitted price, estimation error, durations, etc.)
   if (exists("estim_price_data")) {
     estim_price_data <- rbind(estim_price_data, copy(curr_prices))
     
@@ -120,7 +123,7 @@ for (curr_date in dates) {
     
   }
   
-  # Storing estimated best parameters froma calculation
+  # Storing estimated best parameters from the optimization
   if (exists("est_params")) {
     est_params <- rbind(est_params, copy(curr_est_params))
     
@@ -129,7 +132,7 @@ for (curr_date in dates) {
     
   }
   
-  # Storing the value of the objection function after the optimisation
+  # Storing the value of the objection function after the optimization
   if (exists("obj_fun_values")) {
     obj_fun_values <- rbind(obj_fun_values, copy(curr_obj_value))
     
