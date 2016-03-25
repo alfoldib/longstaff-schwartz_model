@@ -23,4 +23,4 @@ The project is implemented in `R`.
 ![alt text](https://github.com/alfoldib/longstaff-schwartz_model/blob/master/plots/plotGMMfit.png "Plot about the GMM fit")
 
 
-![alt text](https://plot.ly/~Alfoldib/155.embed "Plot about the GMM fit")
+![alt text](https://plot.ly/~Alfoldib/155/hungarian-government-bond-zero-coupon-yield-curve/ "3D graph about the Hun Gov zero-coupon yield curve")
