@@ -37,11 +37,7 @@ The other valid usage is to estimate parameters for a market / short-run calibra
 #### Calibration of the Longstaff-Schwartz model to observed market prices
 ---
 
-<iframe src="https://plot.ly/~Alfoldib/155/hungarian-government-bond-zero-coupon-yield-curve/.embed"
-        height="600" width="100%"
-        scrolling="no" seamless="seamless"
-        frameBorder="0">
-</iframe>
+<iframe width="900" height="800" frameborder="0" scrolling="no" src="https://plot.ly/~Alfoldib/155.embed"></iframe>
 
-
+<img src="https://plot.ly/~Alfoldib/155/hungarian-government-bond-zero-coupon-yield-curve/.png">
 
