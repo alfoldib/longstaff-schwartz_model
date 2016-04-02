@@ -17,11 +17,16 @@ The project is implemented in `R`.
 - [ ] Script for estimating long-run model parameters with GMM
 - [x] Script for estimating short-run model parameters with DE optimization
 - [x] Script for estimating short-run model parameters with DE optimization with initial population
+- [x] Script for complete loop over the trading days between 2003 and 2015 to calculate the daily zero-coupon yield curve 
 
+---
+#### Long run calibration of the Longstaff-Schwartz model
 ---
 
 ![alt text](https://github.com/alfoldib/longstaff-schwartz_model/blob/master/plots/plotGMMfit.png "Plot about the GMM fit")
 
+---
+#### Calibration of the Longstaff-Schwartz model to observed market prices
 ---
 
 ![alt text](https://github.com/alfoldib/longstaff-schwartz_model/blob/master/plots/hunGov_zero-coupon_yield.png "Plot hungarian government bond zero curve")
