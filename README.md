@@ -11,8 +11,8 @@ This GitHub page is a collection of what I accomplished, found. I wanted to make
 The project is implemented in `R`.
 
 In my thesis I present two calibration technique:
-1) Long-run calibration
-2) Market calibrtion
+1. Long-run calibration
+2. Short-run / Market calibration
 
 **Contents:**
 - [x] Database about the Hungarian Government bonds from 2003 to 2015 
@@ -36,8 +36,6 @@ The other valid usage is to estimate parameters for a market / short-run calibra
 ---
 #### Calibration of the Longstaff-Schwartz model to observed market prices
 ---
-
-<iframe width="900" height="800" frameborder="0" scrolling="no" src="https://plot.ly/~Alfoldib/155.embed"></iframe>
 
 <img src="https://plot.ly/~Alfoldib/155/hungarian-government-bond-zero-coupon-yield-curve/.png">
 
