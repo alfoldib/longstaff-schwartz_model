@@ -43,6 +43,5 @@ The other valid usage is to estimate parameters for a market / short-run calibra
         frameBorder="0">
 </iframe>
 
-<img src="https://plot.ly/~Alfoldib/155/hungarian-government-bond-zero-coupon-yield-curve/.png">
 
-![alt text](https://github.com/alfoldib/longstaff-schwartz_model/blob/master/plots/hunGov_zero-coupon_yield.png "Plot hungarian government bond zero curve")
+
