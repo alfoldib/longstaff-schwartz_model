@@ -55,13 +55,20 @@ These parameters increase the speed of convergence of the second calibration met
 
 <hr>
 
+<p>The short-run (market) calibration method enables the user to calibrate the model to a specific trading day.
+This alorithm minimizes the difference between the observed market prices and the model fitted prices. 
+The obtained parameters are the best estimate given the Longstaff-Schwartz model is correctly specified.
+This technique enables the user to further investigate and price interest rate derivatives (like bond options, swaptions, etc).</p>
+
 <p><img src="https://plot.ly/%7EAlfoldib/155/hungarian-government-bond-zero-coupon-yield-curve/.png" alt="Zero-coupon yield curve"></p>
+
+<p>The calibration method uses a powerful differential evolution algorithm [Storn - Price, 1997] in optimizing, while searching for the optimal parameters.</p>
 
 <br>
 
 <p><strong>Contents:</strong></p>
 <ul>
-<li>Database about the Hungarian Government bonds from 2003 to 2015 </li>
+<li>Database about the Hungarian Government bonds ranging from 2003 to 2015 </li>
 <li>Scripts for cleaning and correcting the raw data</li>
 <li>Script for estimating the state variables with GARCH</li>
 <li>Script for estimating long-run model parameters with GMM</li>
