@@ -1,10 +1,13 @@
-# Állapotváltozók idõsorának meghatározása
+# Script which determines the current levels of state variables, 
+# - the short-term interest rate 
+# - and the instantenous variance of the short-term interest rate
 
 setwd("C:/Users/Boldi/Documents/Szakdoga")
 
 rm(list=ls(all=TRUE))
 gc()
 
+# List of required packages
 require(rugarch)
 require(ggplot2)
 require(reshape2)
@@ -28,6 +31,7 @@ dat[, change := change / 100]
 dat[, abs_change :=  abs(change)]
 dat[, sq_change :=  (change)^2]
 
+# Function that gets the data from the result of generic acf() function
 get_plot_parts_acf <- function(x, ci, type_name){
   clim <- qnorm((1 + ci)/2)/sqrt(x$n.used)
   acf <- c(x$acf)
@@ -53,8 +57,8 @@ ggplot(data = to_plot[variable != "Hozam",],
   geom_line() +
   scale_y_continuous(labels = percent) +
   facet_wrap( ~ variable, scales = "free_y") + 
-  labs(list(title = "A volatilitás klaszterezõdése a 3 hónapos magyar állampapír hozamokban\n",
-            x = "\nDátum", y = NULL)) + 
+  labs(list(title = "Volatility clustering in 3M hungarian government bond yieds\n",
+            x = "\nDate", y = NULL)) + 
   theme(legend.title=element_blank(),
         panel.background = element_blank(),
         axis.title = element_text(size = 12),
